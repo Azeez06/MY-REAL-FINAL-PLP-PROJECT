@@ -53,7 +53,7 @@ export default function Register() {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
         
         <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-6">
-          {isLogin ? "Welcome Back 👋" : "Create Your Account 🚀"}
+          {isLogin ? "Welcome Back 👋" : "Create Your Account"}
         </h2>
 
         {error && (
