@@ -14,18 +14,16 @@ import {
 export default function Home() {
   return (
     <>
-      <Navbar />
 
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center justify-between px-8 md:px-20 py-20 bg-gradient-to-br from-blue-50 to-white">
         {/* Left side - Text */}
         <div className="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-            Free AI Resume Builder: <br /> Make Yours in Minutes
+            Free Career Builder & Portfololio Maker
           </h1>
           <p className="text-gray-600 text-lg mb-8">
-            Build a professional resume that stands out. Fast, free, and powered by AI 
-            tailored to your career goals.
+            Build a professional resume that stands out. Fast, free, and powered by us to accelerate your career goals.
           </p>
           <a
             href="/register"
@@ -161,7 +159,7 @@ export default function Home() {
           </div>
           
         </div>
-         <Footer />
+       
       </section>
     </>
   );

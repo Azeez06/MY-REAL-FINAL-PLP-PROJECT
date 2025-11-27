@@ -415,7 +415,7 @@ export default function PortfolioBuilder() {
               Preview Portfolio
             </button>
           </div>
-           <Footer />
+         
         </div>
       )}
     </div>

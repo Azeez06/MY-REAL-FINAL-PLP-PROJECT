@@ -314,7 +314,7 @@ const downloadSOP = () => {
 
 
   </div>
-   <Footer />
+  
 </div>
 
   );

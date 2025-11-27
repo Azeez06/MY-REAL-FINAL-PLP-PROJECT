@@ -11,8 +11,25 @@ import JobAlerts from "./pages/JobAlerts";
 import PortfolioBuilder from "./pages/PortfolioBuilder";
 import Settings from "./pages/Settings";
 
-// ✅ Import ProtectedRoute
 import ProtectedRoute from "./components/ProtectedRoute";
+
+// ✅ Import Layout
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+function Layout({ children }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+
+      <main className="flex-1">
+        {children}
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
 
 function App() {
   return (
@@ -20,16 +37,41 @@ function App() {
       <Routes>
 
         {/* Public Pages */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <Home />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={
+            <Layout>
+              <Login />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <Layout>
+              <Register />
+            </Layout>
+          }
+        />
 
         {/* Protected Pages */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Layout>
+                <Dashboard />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -38,7 +80,9 @@ function App() {
           path="/ResumeBuilder"
           element={
             <ProtectedRoute>
-              <ResumeBuilder />
+              <Layout>
+                <ResumeBuilder />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -47,7 +91,9 @@ function App() {
           path="/CoverLetterBuilder"
           element={
             <ProtectedRoute>
-              <CoverLetterBuilder />
+              <Layout>
+                <CoverLetterBuilder />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -56,7 +102,9 @@ function App() {
           path="/SOPBuilder"
           element={
             <ProtectedRoute>
-              <SOPBuilder />
+              <Layout>
+                <SOPBuilder />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -65,7 +113,9 @@ function App() {
           path="/JobAlerts"
           element={
             <ProtectedRoute>
-              <JobAlerts />
+              <Layout>
+                <JobAlerts />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -74,7 +124,9 @@ function App() {
           path="/PortfolioBuilder"
           element={
             <ProtectedRoute>
-              <PortfolioBuilder />
+              <Layout>
+                <PortfolioBuilder />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -83,7 +135,9 @@ function App() {
           path="/Settings"
           element={
             <ProtectedRoute>
-              <Settings />
+              <Layout>
+                <Settings />
+              </Layout>
             </ProtectedRoute>
           }
         />

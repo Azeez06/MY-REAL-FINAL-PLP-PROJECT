@@ -180,7 +180,7 @@ export default function Settings() {
           </button>
         </div>
       </div>
-       <Footer />
+     
     </div>
   );
 }

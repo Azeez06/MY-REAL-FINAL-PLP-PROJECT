@@ -339,9 +339,6 @@ const downloadPDF = () => {
 
     </div>
 
-    {/* FOOTER (always stays at bottom) */}
-    <Footer />
-
   </div>
 );
 }
