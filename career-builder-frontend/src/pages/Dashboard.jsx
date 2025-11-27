@@ -206,42 +206,9 @@ export default function Dashboard() {
         </div>
 
 
-        {/* ============================================================
-               4️⃣ CAREER ARTICLES SECTION
-        ============================================================ */}
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <Newspaper className="text-orange-600" /> Recommended Career Tips
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: "How to Write a Resume That Gets You Hired",
-              link: "https://www.indeed.com/career-advice/resumes-cover-letters/how-to-write-a-resume",
-            },
-            {
-              title: "Top Skills Employers Are Looking For in 2025",
-              link: "https://www.linkedin.com/pulse/top-skills-2025-linkedin",
-            },
-            {
-              title: "How to Make Your CV Stand Out",
-              link: "https://www.glassdoor.com/blog/guide/how-to-write-a-cv/",
-            },
-          ].map((a, i) => (
-            <a
-              key={i}
-              href={a.link}
-              target="_blank"
-              className="bg-white p-5 rounded-xl border shadow-sm hover:shadow-md transition block"
-            >
-              <h3 className="font-semibold mb-1">{a.title}</h3>
-              <p className="text-blue-600 text-sm">Read article →</p>
-            </a>
-          ))}
-        </div>
 
       </div>
-       <Footer />
+
     </div>
   );
 }

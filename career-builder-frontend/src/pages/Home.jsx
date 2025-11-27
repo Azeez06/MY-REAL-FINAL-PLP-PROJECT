@@ -1,14 +1,8 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import {
-  CheckCircle,
-  FileText,
-  PenTool,
-  Bell,
-  Monitor,
-  Download,
-  BookOpen,
-  Briefcase,
+
+import { 
+  CheckCircle, FileText, PenTool, Bell, Monitor, Download, BookOpen, Briefcase, Newspaper 
 } from "lucide-react";
 
 export default function Home() {
@@ -157,10 +151,56 @@ export default function Home() {
               Showcase your skills, experience, and achievements beautifully — all in one professional portfolio.
             </p>
           </div>
-          
-        </div>
-       
+         
+
+        </div>       
       </section>
+       {/* ============================================================
+      ⭐ RECOMMENDED CAREER ARTICLES (Moved From Dashboard)
+============================================================ */}
+
+<section className="py-16 px-6 md:px-12 bg-gradient-to-b from-blue-50 to-white">
+  <div className="max-w-6xl mx-auto">
+
+    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3">
+      <Newspaper className="text-blue-700" size={32} />
+      Career Tips
+    </h2>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {[
+        {
+          title: "How to Write a Resume That Gets You Hired",
+          link: "https://www.linkedin.com/advice/3/how-can-you-write-resume-gets-hired-skills-career-counseling",
+        },
+        {
+          title: "Top 10 Skills Employers Are Looking For in 2025",
+          link: "https://www.jobsregion.com/top-10-skills-employers-are-looking-for/",
+        },
+        {
+          title: "How to Create a Career Plan That Works for You",
+          link: "https://www.pulse.ng/story/how-to-create-a-career-plan-2025111415202406092",
+        },
+      ].map((a, i) => (
+        <a
+          key={i}
+          href={a.link}
+          target="_blank"
+          className="bg-white p-6 rounded-2xl shadow-md border hover:shadow-xl hover:-translate-y-1 transition block"
+        >
+          <h3 className="font-semibold text-lg text-gray-800 mb-2">
+            {a.title}
+          </h3>
+          <p className="text-blue-700 text-sm font-medium">
+            Read article →
+          </p>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>
     </>
+    
   );
 }
