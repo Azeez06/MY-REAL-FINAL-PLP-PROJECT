@@ -68,22 +68,7 @@ const Navbar = () => {
           <Link to="/register" className="block text-gray-700 text-lg">
             Portfolio
           </Link>
-
-          <hr className="border-gray-300" />
-
-          <Link
-            to="/register"
-            className="block border border-blue-700 text-blue-700 px-4 py-2 rounded-md text-center"
-          >
-            Sign In
-          </Link>
-
-          <Link
-            to="/register"
-            className="block bg-blue-700 text-white px-4 py-2 rounded-md text-center"
-          >
-            Create Account
-          </Link>
+        
         </div>
       )}
     </nav>
