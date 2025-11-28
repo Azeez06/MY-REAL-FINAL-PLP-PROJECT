@@ -23,7 +23,7 @@ export default function Register() {
         // 🔵 LOGIN REQUEST
         // =====================
       const res = await axios.post(
-  "https://career-builder-backend-anad.onrender.com/api/auth/login",
+  "http://localhost:5000/api/auth/login",
   { email, password }
 );
 
@@ -36,7 +36,7 @@ export default function Register() {
       // 🔵 REGISTER REQUEST
       // =====================
   const res = await axios.post(
-  "https://career-builder-backend-anad.onrender.com/api/auth/register",
+  "http://localhost:5000/api/auth/register",
   { fullName: fullname, email, password }
 );
 
