@@ -28,7 +28,7 @@ export default function Footer() {
               text-left text-gray-800
             "
           >
-            <a href="/ResumeBuilder" className="hover:text-blue-700 transition">Resume Builder</a>
+            <a href="/Dashboard" className="hover:text-blue-700 transition">Resume Builder</a>
             <a href="/CoverLetterBuilder" className="hover:text-blue-700 transition">Cover Letter</a>
             <a href="/SOPBuilder" className="hover:text-blue-700 transition">SOP Builder</a>
             <a href="/PortfolioBuilder" className="hover:text-blue-700 transition">Portfolio</a>

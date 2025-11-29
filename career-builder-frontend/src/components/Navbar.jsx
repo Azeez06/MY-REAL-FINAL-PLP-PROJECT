@@ -25,6 +25,7 @@ const Navbar = () => {
           <Link to="/register" className="hover:text-blue-600 transition">Cover Letters</Link>
           <Link to="/register" className="hover:text-blue-600 transition">Portfolio</Link>
         </div>
+        
 
         {/* DESKTOP AUTH BUTTONS */}
         <div className="hidden md:flex items-center space-x-4">

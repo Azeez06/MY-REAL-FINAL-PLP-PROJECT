@@ -1,12 +1,11 @@
 // src/pages/Dashboard.jsx
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { apiClient, authHeaders } from "../utils/api";
 
 // Icons
-import { Briefcase, Sparkles, Newspaper } from "lucide-react";
+import { Briefcase, Sparkles, Newspaper, Settings as SettingsIcon } from "lucide-react";
 
 const tiles = [
   { title: "Resume Builder", desc: "Create a job-winning resume", route: "/ResumeBuilder" },
@@ -18,25 +17,20 @@ const tiles = [
   { title: "CV Analyzer", desc: "Get AI feedback", route: "/cv-analyzer" },
   { title: "Settings", desc: "Manage account", route: "/Settings" },
 ];
+
 export default function Dashboard() {
   const navigate = useNavigate();
+  const savedResumesRef = useRef(null);
 
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const [savedResumes, setSavedResumes] = useState([]);
 
-  // REMOVE THIS (you asked for that)
-  // const resumes = JSON.parse(localStorage.getItem("cb_resumes")) || [];
-
-  // Keep this — used for recommended jobs
   const user = JSON.parse(localStorage.getItem("cb_user")) || {};
-
-  const skillOrTitle =
-    user?.profession ||
-    user?.skills ||
-    "Mass Communication"; // fallback keyword
+  const skillOrTitle = user?.profession || user?.skills || "Mass Communication";
 
   // ======================================================
-  // 🔥 1. FETCH JOBS (ALREADY WORKING)
+  // 🔥 FETCH JOBS
   // ======================================================
   useEffect(() => {
     const fetchJobs = async () => {
@@ -48,13 +42,11 @@ export default function Dashboard() {
           {
             method: "GET",
             headers: {
-              "x-rapidapi-key":
-                "0b5b496647mshd574be77fbbe992p162869jsne3d2c2a4cdd0",
+              "x-rapidapi-key": "0b5b496647mshd574be77fbbe992p162869jsne3d2c2a4cdd0",
               "x-rapidapi-host": "jsearch.p.rapidapi.com",
             },
           }
         );
-
         const data = await res.json();
         setJobs(data?.data?.slice(0, 3) || []);
       } catch (err) {
@@ -63,29 +55,23 @@ export default function Dashboard() {
         setLoadingJobs(false);
       }
     };
-
     fetchJobs();
   }, []);
 
   // ======================================================
-  // 🔥 2. FETCH USER'S SAVED RESUMES FROM BACKEND
+  // 🔥 FETCH USER'S SAVED RESUMES
   // ======================================================
-  const [savedResumes, setSavedResumes] = useState([]);
-
   useEffect(() => {
     const loadResumes = async () => {
       try {
         const res = await apiClient.get("/resume/my", {
           headers: authHeaders(),
         });
-
-        console.log("Fetched resumes:", res.data);
         setSavedResumes(res.data.resumes || []);
       } catch (err) {
         console.error("Error fetching resumes:", err);
       }
     };
-
     loadResumes();
   }, []);
 
@@ -98,28 +84,56 @@ export default function Dashboard() {
     navigate("/");
   };
 
-  
-  
+  // ======================================================
+  // SCROLL TO SAVED RESUMES
+  // ======================================================
+  const scrollToResumes = () => {
+    savedResumesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
 
         {/* =================== HEADER =================== */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+            <button
+              onClick={() => navigate("/Settings")}
+              className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+            >
+              <SettingsIcon className="w-5 h-5 text-gray-700" />
+            </button>
+          </div>
         </div>
 
+        {/* =================== QUICK STATS =================== */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div
+            onClick={scrollToResumes}
+            className="cursor-pointer bg-white p-4 rounded-lg shadow flex flex-col items-center hover:shadow-lg transition transform hover:-translate-y-1"
+          >
+            <h3 className="text-gray-500 text-sm">Resumes</h3>
+            <p className="text-2xl font-bold text-blue-600">{savedResumes.length}</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow flex flex-col items-center hover:shadow-lg transition transform hover:-translate-y-1">
+            <h3 className="text-gray-500 text-sm">Cover Letters</h3>
+            <p className="text-2xl font-bold text-purple-600">0</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow flex flex-col items-center hover:shadow-lg transition transform hover:-translate-y-1">
+            <h3 className="text-gray-500 text-sm">SOPs</h3>
+            <p className="text-2xl font-bold text-green-600">0</p>
+          </div>
+        </div>
 
-        {/* ============================================================
-              1️⃣ RECOMMENDED JOBS SECTION
-        ============================================================ */}
+        {/* =================== RECOMMENDED JOBS =================== */}
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Briefcase className="text-blue-600" /> Recommended Jobs Related to Your Resume
         </h2>
@@ -148,47 +162,44 @@ export default function Dashboard() {
           </div>
         )}
 
-<div className="mt-8">
-  <h2 className="text-xl font-bold mb-3">Your Saved Resumes</h2>
+        {/* =================== SAVED RESUMES =================== */}
+        <div ref={savedResumesRef} className="mt-8">
+          <h2 className="text-xl font-bold mb-3">Your Saved Resumes</h2>
 
-  {savedResumes.length === 0 ? (
-    <p className="text-gray-500">You haven't saved any resumes yet.</p>
-  ) : (
-    <ul className="space-y-2">
-      {savedResumes.map((resume) => (
-        <li
-          key={resume._id}
-          className="p-4 bg-white shadow rounded-lg border flex justify-between items-start"
-        >
-          <div>
-            <h3 className="font-semibold">{resume.title}</h3>
-            <p className="text-sm text-gray-600">
-              {resume.summary?.slice(0, 80)}...
-            </p>
-            <p className="text-xs text-gray-400">
-              Created: {new Date(resume.createdAt).toLocaleString()}
-            </p>
-          </div>
+          {savedResumes.length === 0 ? (
+            <p className="text-gray-500">You haven't saved any resumes yet.</p>
+          ) : (
+            <ul className="space-y-2">
+              {savedResumes.map((resume) => (
+                <li
+                  key={resume._id}
+                  className="p-4 bg-white shadow rounded-lg border flex justify-between items-start hover:shadow-lg transition-transform transform hover:-translate-y-1"
+                >
+                  <div>
+                    <h3 className="font-semibold">{resume.title}</h3>
+                    <p className="text-sm text-gray-600">
+                      {resume.summary?.slice(0, 80)}...
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      Created: {new Date(resume.createdAt).toLocaleString()}
+                    </p>
+                  </div>
 
-          {/* EDIT BUTTON */}
-          <button
-            onClick={() => navigate(`/ResumeBuilder?edit=${resume._id}`)}
-            className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 ml-4"
-          >
-            Edit
-          </button>
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
+                  {/* EDIT BUTTON */}
+                  <button
+                    onClick={() => navigate(`/ResumeBuilder?edit=${resume._id}`)}
+                    className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 ml-4"
+                  >
+                    Edit
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-
-
-        {/* ============================================================
-               3️⃣ TOOLS SECTION
-        ============================================================ */}
-        <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
+        {/* =================== TOOLS =================== */}
+        <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 mt-10">
           <Sparkles className="text-purple-600" /> Explore Job Tools
         </h2>
 
@@ -204,11 +215,7 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
-
-
-
       </div>
-
     </div>
   );
 }
