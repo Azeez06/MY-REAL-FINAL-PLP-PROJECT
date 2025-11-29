@@ -155,7 +155,7 @@ const saveResumeToServer = async () => {
 
     const token = localStorage.getItem("token");
 
-    const res = await apiClient.post("/resume/create", payload, {
+    const res = await apiClient.post("api/resume/create", payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -173,6 +173,9 @@ const saveResumeToServer = async () => {
     alert(err.response?.data?.message || "Save failed");
   }
 };
+
+
+
 
 const [searchParams] = useSearchParams();
 const editId = searchParams.get("edit");
