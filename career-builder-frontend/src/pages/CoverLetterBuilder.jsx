@@ -2,6 +2,13 @@ import { useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Footer from "../components/Footer";
+import React from "react";
+
+const NoRerender = React.memo(function ({ children }) {
+  return children;
+});
+
+
 
 export default function CoverLetterBuilder() {
   const [step, setStep] = useState(1);
@@ -206,13 +213,15 @@ const downloadPDF = () => {
       {/* Step 5 */}
       {step === 4 && (
         <QuestionBox title="What did you study?">
-          <input
-            type="text"
-            value={study}
-            onChange={(e) => setStudy(e.target.value)}
-            placeholder="e.g. Computer Science"
-            className="border border-gray-300 rounded-md px-6 py-4 text-lg w-96 text-center focus:outline-none focus:border-blue-500"
-          />
+          <NoRerender>
+  <input
+    type="text"
+    value={study}
+    onChange={(e) => setStudy(e.target.value)}
+    placeholder="e.g. Computer Science"
+    className="border border-gray-300 rounded-md px-6 py-4 text-lg w-96 text-center focus:outline-none focus:border-blue-500"
+  />
+</NoRerender>
 
           <h2 className="text-3xl font-semibold mt-12">
             What company and role are you applying for?
