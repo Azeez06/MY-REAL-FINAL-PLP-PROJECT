@@ -15,26 +15,29 @@ export default function SetUsername() {
   });
   const [message, setMessage] = useState("");
 
-  // Fetch user's portfolio and username
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(`${API}/api/resume/my`, {
-          withCredentials: true,
-        });
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(`${API}/api/portfolio/my`, {
+        withCredentials: true,
+      });
 
-        if (res.data.resumes?.length > 0) {
-          const myResume = res.data.resumes[0];
-          setUsername(myResume.publicUsername || "");
-          setPortfolio(myResume.portfolio || portfolio);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
+      setUsername(res.data.publicUsername || "");
+      setPortfolio({
+        profile: res.data.profile || {},
+        services: res.data.services || [],
+        projects: res.data.projects || [],
+        contact: res.data.contact || {},
+      });
+
+    } catch (err) {
+      console.error("Error loading portfolio", err);
+    }
+    setLoading(false);
+  };
+
+  fetchData();
+}, []);
 
   // Save username
   const handleSaveUsername = async () => {
