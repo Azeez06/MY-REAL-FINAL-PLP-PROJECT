@@ -13,7 +13,10 @@ import Settings from "./pages/Settings";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// ✅ Import Layout
+// New pages
+import SetUsername from "./pages/SetUsername";
+import PublicPortfolio from "./pages/PublicPortfolio";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -21,11 +24,7 @@ function Layout({ children }) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-
-      <main className="flex-1">
-        {children}
-      </main>
-
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );
@@ -60,6 +59,16 @@ function App() {
           element={
             <Layout>
               <Register />
+            </Layout>
+          }
+        />
+
+        {/* Public Portfolio View */}
+        <Route
+          path="/portfolio/:username"
+          element={
+            <Layout>
+              <PublicPortfolio />
             </Layout>
           }
         />
@@ -120,6 +129,19 @@ function App() {
           }
         />
 
+        {/* Username setup */}
+        <Route
+          path="/set-username"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <SetUsername />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Portfolio Editor / Builder */}
         <Route
           path="/PortfolioBuilder"
           element={
