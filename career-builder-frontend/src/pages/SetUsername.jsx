@@ -40,18 +40,22 @@ export default function SetUsername() {
 }, []);
 
   // Save username
-  const handleSaveUsername = async () => {
-    try {
-      const res = await axios.put(
-        `${API}/api/portfolio/set-username`,
-        { username },
-        { withCredentials: true }
-      );
-      setMessage(res.data.message);
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Error saving username");
-    }
-  };
+const handleSaveUsername = async () => {
+  try {
+    const res = await axios.put(
+      `${API}/api/portfolio/set-username`,
+      { username },
+      { withCredentials: true }
+    );
+
+    // 💥 ADD THIS LINE
+    localStorage.setItem("portfolioUsername", username);
+
+    setMessage(res.data.message);
+  } catch (err) {
+    setMessage(err.response?.data?.message || "Error saving username");
+  }
+};
 
   // Save portfolio from builder
   const handleSavePortfolio = async (updatedPortfolio) => {
