@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import PortfolioBuilder from "./PortfolioBuilder"; // import your builder
+import PortfolioBuilder from "./PortfolioBuilder";
+import { savePortfolio } from "../utils/api"; // import helper
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -15,55 +16,58 @@ export default function SetUsername() {
   });
   const [message, setMessage] = useState("");
 
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`${API}/api/portfolio/my`, {
-        withCredentials: true,
-      });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${API}/api/portfolio/my`, {
+          withCredentials: true,
+        });
 
-      setUsername(res.data.publicUsername || "");
-      setPortfolio({
-        profile: res.data.profile || {},
-        services: res.data.services || [],
-        projects: res.data.projects || [],
-        contact: res.data.contact || {},
-      });
+        setUsername(res.data.publicUsername || "");
+        if (res.data.publicUsername) {
+          localStorage.setItem("portfolioUsername", res.data.publicUsername);
+        }
 
-    } catch (err) {
-      console.error("Error loading portfolio", err);
+        setPortfolio({
+          profile: res.data.profile || {},
+          services: res.data.services || [],
+          projects: res.data.projects || [],
+          contact: res.data.contact || {},
+        });
+      } catch (err) {
+        console.error("Error loading portfolio", err);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  // Save username and store in localStorage
+  const handleSaveUsername = async () => {
+    if (!username.trim()) {
+      setMessage("Username cannot be empty");
+      return;
     }
-    setLoading(false);
+
+    try {
+      const res = await axios.put(
+        `${API}/api/portfolio/set-username`,
+        { username },
+        { withCredentials: true }
+      );
+      localStorage.setItem("portfolioUsername", username); // ✅ store locally
+      setMessage(res.data.message || "Username saved successfully");
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Error saving username");
+    }
   };
 
-  fetchData();
-}, []);
-
-  // Save username
-const handleSaveUsername = async () => {
-  try {
-    const res = await axios.put(
-      `${API}/api/portfolio/set-username`,
-      { username },
-      { withCredentials: true }
-    );
-
-    // 💥 ADD THIS LINE
-    localStorage.setItem("portfolioUsername", username);
-
-    setMessage(res.data.message);
-  } catch (err) {
-    setMessage(err.response?.data?.message || "Error saving username");
-  }
-};
-
   // Save portfolio from builder
-  const handleSavePortfolio = async (updatedPortfolio) => {
+  const handleSavePortfolio = async (username, updatedPortfolio) => {
     try {
-      const res = await axios.put(`${API}/api/portfolio/save`, updatedPortfolio, {
-        withCredentials: true,
-      });
-      setPortfolio(updatedPortfolio); // update local state
+      await savePortfolio(username, updatedPortfolio);
+      setPortfolio(updatedPortfolio);
       setMessage("Portfolio saved successfully!");
     } catch (err) {
       setMessage("Error saving portfolio");
@@ -107,7 +111,9 @@ const handleSaveUsername = async () => {
         initialServices={portfolio.services}
         initialProjects={portfolio.projects}
         initialContact={portfolio.contact}
-        onSavePortfolio={handleSavePortfolio}
+        onSavePortfolio={(updatedPortfolio) =>
+          handleSavePortfolio(username, updatedPortfolio)
+        }
       />
 
       {message && <p className="mt-4 text-blue-600">{message}</p>}

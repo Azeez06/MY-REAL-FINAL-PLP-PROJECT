@@ -24,7 +24,6 @@ export default function PortfolioBuilder({
   const [projects, setProjects] = useState(initialProjects || [{ title: "", description: "", link: "" }]);
   const [contact, setContact] = useState(initialContact || { email: "", phone: "", linkedin: "" });
   const [preview, setPreview] = useState(false);
-  const username = localStorage.getItem("portfolioUsername");
 
 
   // Update local state if props change
@@ -54,19 +53,18 @@ export default function PortfolioBuilder({
 
   const handlePreview = () => setPreview(true);
 
-const handleSave = () => {
-  if (!username) {
-    alert("Please set your username before saving your portfolio.");
-    return;
-  }
+// 1. Get username from localStorage
 
-  onSavePortfolio(username, {
+// 2. Your save function stays the same, nothing to remove
+const handleSave = () => {
+  onSavePortfolio({
     profile,
     services,
     projects,
     contact,
   });
 };
+
 
   const serviceIcons = [Monitor, Link2, PenTool, Share2, Palette, Brain];
 
