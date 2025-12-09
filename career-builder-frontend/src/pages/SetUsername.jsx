@@ -64,15 +64,15 @@ export default function SetUsername() {
   };
 
   // Save portfolio from builder
-  const handleSavePortfolio = async (username, updatedPortfolio) => {
-    try {
-      await savePortfolio(username, updatedPortfolio);
-      setPortfolio(updatedPortfolio);
-      setMessage("Portfolio saved successfully!");
-    } catch (err) {
-      setMessage("Error saving portfolio");
-    }
-  };
+  const handleSavePortfolio = async (updatedPortfolio) => {
+  try {
+    await savePortfolio(username, updatedPortfolio);
+    setPortfolio(updatedPortfolio);
+    setMessage("Portfolio saved successfully!");
+  } catch (err) {
+    setMessage("Error saving portfolio");
+  }
+};
 
   if (loading) return <p className="p-6">Loading...</p>;
 
@@ -111,9 +111,7 @@ export default function SetUsername() {
         initialServices={portfolio.services}
         initialProjects={portfolio.projects}
         initialContact={portfolio.contact}
-        onSavePortfolio={(updatedPortfolio) =>
-          handleSavePortfolio(username, updatedPortfolio)
-        }
+       onSavePortfolio={handleSavePortfolio}
       />
 
       {message && <p className="mt-4 text-blue-600">{message}</p>}

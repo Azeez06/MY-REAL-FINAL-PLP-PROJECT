@@ -17,13 +17,14 @@ export const authHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-// -------------------- New function --------------------
-// Save a portfolio for a specific username
 export const savePortfolio = async (username, data) => {
   try {
-    const response = await apiClient.post(`/portfolios/${username}`, data, {
-      headers: authHeaders(),
-    });
+    const response = await apiClient.put(
+      `/api/portfolio/save`,
+      { username, ...data },
+      { headers: authHeaders(), withCredentials: true }
+    );
+
     return response.data;
   } catch (error) {
     console.error("Error saving portfolio:", error);
