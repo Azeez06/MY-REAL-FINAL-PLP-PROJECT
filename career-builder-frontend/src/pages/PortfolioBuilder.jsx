@@ -94,6 +94,7 @@ const handleSave = async () => {
 
     // Prepare portfolio data from state
     const portfolioData = {
+       publicUsername: username,
       profile: portfolio.profile,
       services: portfolio.services,
       projects: portfolio.projects,

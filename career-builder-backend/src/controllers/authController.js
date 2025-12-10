@@ -14,25 +14,26 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Please provide all required fields." });
     }
 
-    // check if user exists
+    // Check if user already exists
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: "User already exists." });
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(password, salt);
 
-    const user = await User.create({
-      fullName,
-      email,
-      password: hashed
-    });
+    // Create user (username generated automatically via User model pre-save)
+   const user = new User({ fullName, email, password: hashed });
+await user.save();
+
 
     return res.status(201).json({
       message: "Registration successful",
       user: {
         id: user._id,
         fullName: user.fullName,
-        email: user.email
+        email: user.email,
+        username: user.username // <-- added username
       },
       token: generateToken(user._id)
     });
@@ -62,7 +63,8 @@ export const loginUser = async (req, res) => {
       user: {
         id: user._id,
         fullName: user.fullName,
-        email: user.email
+        email: user.email,
+        username: user.username // <-- added username
       },
       token: generateToken(user._id)
     });
@@ -78,11 +80,22 @@ export const loginUser = async (req, res) => {
  */
 export const getMe = async (req, res) => {
   try {
-    // auth middleware will set req.user
     if (!req.user) return res.status(401).json({ message: "Not authorized" });
 
     const user = await User.findById(req.user._id).select("-password");
-    return res.json({ user });
+    return res.json({
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        username: user.username, // <-- added username
+        phone: user.phone,
+        linkedin: user.linkedin,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    });
   } catch (error) {
     console.error("getMe error:", error);
     return res.status(500).json({ message: "Server error" });

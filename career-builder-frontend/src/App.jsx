@@ -169,4 +169,11 @@ function App() {
   );
 }
 
+// Wrapper to pass username from URL params
+import { useParams } from "react-router-dom";
+function PublicPortfolioWrapper() {
+  const { username } = useParams();
+  return <PublicPortfolio username={username} />;
+}
+
 export default App;
