@@ -19,9 +19,11 @@ export const authHeaders = () => {
 
 export const savePortfolio = async (portfolioData) => {
   const token = localStorage.getItem("token");
-  const res = await axios.put(`${API}/api/portfolio/save`, portfolioData, {
+
+  const res = await apiClient.put(`/api/portfolio/save`, portfolioData, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
   return res.data;
 };
 
