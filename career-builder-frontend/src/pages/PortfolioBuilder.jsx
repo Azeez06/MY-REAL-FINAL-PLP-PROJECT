@@ -33,37 +33,33 @@ export default function PortfolioBuilder() {
   const [preview, setPreview] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Fetch portfolio data on mount
   useEffect(() => {
-  const fetchData = async () => {
+  const fetchPortfolio = async () => {
     try {
-      const storedUsername = localStorage.getItem("portfolioUsername");
+      const token = localStorage.getItem("token");
+      if (!token) return setLoading(false);
 
-      if (!storedUsername) {
-        console.log("No stored username yet.");
-        setLoading(false);
-        return;
+      const res = await axios.get(`${API}/api/portfolio/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.data) {
+        const p = res.data;
+        setPortfolio({
+          profile: p.profile || { name: "", title: "", bio: "", image: "" },
+          services: p.services?.length ? p.services : [{ title: "", description: "" }],
+          projects: p.projects?.length ? p.projects : [{ title: "", description: "", link: "" }],
+          contact: p.contact || { email: "", phone: "", linkedin: "" },
+        });
+        setUsername(p.publicUsername || "");
       }
-
-      const res = await axios.get(`${API}/api/portfolio/${storedUsername}`, {
-        withCredentials: true,
-      });
-
-      setUsername(res.data.publicUsername || "");
-
-      setPortfolio({
-        profile: res.data.profile || { name: "", title: "", bio: "", image: "" },
-        services: res.data.services?.length ? res.data.services : [{ title: "", description: "" }],
-        projects: res.data.projects?.length ? res.data.projects : [{ title: "", description: "", link: "" }],
-        contact: res.data.contact || { email: "", phone: "", linkedin: "" },
-      });
     } catch (err) {
-      console.error("Error loading portfolio", err);
+      console.error("Error loading portfolio:", err);
     }
     setLoading(false);
   };
 
-  fetchData();
+  fetchPortfolio();
 }, []);
 
   // ------------------ Handlers ------------------
@@ -97,38 +93,26 @@ const handleSave = async () => {
       return;
     }
 
-    // Prepare portfolio data from state
-    const portfolioData = {
-      publicUsername: username,
+    // Call the API helper to save portfolio
+    const result = await savePortfolio({
       profile: portfolio.profile,
       services: portfolio.services,
       projects: portfolio.projects,
       contact: portfolio.contact,
-    };
+    });
 
-    // Call the API helper to save portfolio
-    const result = await savePortfolio(
-      localStorage.getItem("portfolioUsername"),
-      portfolioData
-    );
-
-    // 🔥 IMPORTANT FIX: Save username into storage AFTER a successful save
-    localStorage.setItem("portfolioUsername", username);
+    // Save publicUsername if it exists
+    if (username) localStorage.setItem("portfolioUsername", username);
 
     // Success message
     setMessage(result.message || "Portfolio saved successfully!");
-
   } catch (error) {
     console.error("Error saving portfolio:", error);
     setMessage(
-      error.response?.data?.message ||
-        "Error saving portfolio. Please try again."
+      error.response?.data?.message || "Error saving portfolio. Please try again."
     );
   }
 };
-
-
-
   const serviceIcons = [Monitor, Link2, PenTool, Share2, Palette, Brain];
 
   if (loading) return <p className="p-6">Loading...</p>;
