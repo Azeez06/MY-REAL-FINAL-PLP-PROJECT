@@ -37,7 +37,10 @@ export default function PortfolioBuilder() {
   const fetchPortfolio = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return setLoading(false);
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
       const res = await axios.get(`${API}/api/portfolio/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -55,12 +58,12 @@ export default function PortfolioBuilder() {
 
         setUsername(p.publicUsername || "");
 
-        // 🔥 THIS IS THE KEY FIX
-        setStep(5); // Jump directly to Preview
+        // ✅ RETURNING USER → SHOW PREVIEW DIRECTLY
+        setPreview(true);
       }
     } catch (err) {
       console.log("No portfolio yet → new user");
-      setStep(1);
+      setStep(1); // Wizard starts normally
     }
 
     setLoading(false);
