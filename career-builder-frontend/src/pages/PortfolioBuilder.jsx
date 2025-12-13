@@ -45,22 +45,30 @@ export default function PortfolioBuilder() {
 
       if (res.data) {
         const p = res.data;
+
         setPortfolio({
           profile: p.profile || { name: "", title: "", bio: "", image: "" },
           services: p.services?.length ? p.services : [{ title: "", description: "" }],
           projects: p.projects?.length ? p.projects : [{ title: "", description: "", link: "" }],
           contact: p.contact || { email: "", phone: "", linkedin: "" },
         });
+
         setUsername(p.publicUsername || "");
+
+        // 🔥 THIS IS THE KEY FIX
+        setStep(5); // Jump directly to Preview
       }
     } catch (err) {
-      console.error("Error loading portfolio:", err);
+      console.log("No portfolio yet → new user");
+      setStep(1);
     }
+
     setLoading(false);
   };
 
   fetchPortfolio();
 }, []);
+
 
   // ------------------ Handlers ------------------
   const handleProfileChange = (e) =>
@@ -210,14 +218,32 @@ const handleSave = async () => {
           </div>
         </section>
 
-        <div className="text-center py-8">
-          <button onClick={() => setPreview(false)} className="bg-gray-300 text-gray-900 px-6 py-2 rounded-md hover:bg-gray-400">
-            Edit Portfolio
-          </button>
-          <button onClick={handleSave} className="ml-4 bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700">
-            Save Portfolio
-          </button>
-        </div>
+       <div className="text-center py-8 space-x-4">
+  <button
+    onClick={() => setPreview(false)}
+    className="bg-gray-300 text-gray-900 px-6 py-2 rounded-md hover:bg-gray-400"
+  >
+    Edit Portfolio
+  </button>
+
+  <button
+    onClick={handleSave}
+    className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+  >
+    Save Portfolio
+  </button>
+
+  {username && (
+    <a
+      href={`/portfolio/${username}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 inline-block"
+    >
+      View Public Portfolio
+    </a>
+  )}
+</div>
       </div>
     );
   }

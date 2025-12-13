@@ -14,7 +14,7 @@ export default function PublicPortfolio() {
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const res = await axios.get(`${API}/api/portfolio/public/${username}`);
+        const res = await axios.get(`${API}/api/portfolio/view/${username}`);
         setPortfolio(res.data);
       } catch (err) {
         console.error("Error fetching public portfolio", err);
@@ -39,7 +39,7 @@ export default function PublicPortfolio() {
       <section className="py-20 px-6">
         <h2 className="text-3xl font-bold text-blue-400 mb-4">Services</h2>
         <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
-          {portfolio.services.map((s, i) => (
+         {portfolio.services?.map((s, i) => (
             <div key={i} className="bg-[#161b22] p-6 rounded-xl border border-gray-700">
               <h3 className="text-lg font-semibold text-gray-100">{s.title}</h3>
               <p className="text-gray-400 text-sm mt-2">{s.description}</p>
@@ -52,7 +52,7 @@ export default function PublicPortfolio() {
       <section className="py-20 px-6">
         <h2 className="text-3xl font-bold text-blue-400 mb-4">Projects</h2>
         <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
-          {portfolio.projects.map((p, i) => (
+          {portfolio.projects?.map((p, i) => (
             <div key={i} className="bg-[#161b22] p-6 rounded-xl border border-gray-700">
               <h3 className="text-lg font-semibold text-gray-100">{p.title}</h3>
               <p className="text-gray-400 text-sm mt-2">{p.description}</p>
