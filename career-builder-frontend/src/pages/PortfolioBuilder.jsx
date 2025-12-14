@@ -48,39 +48,27 @@ export default function PortfolioBuilder() {
 
       const p = res.data;
 
-      const hasPortfolio =
-        p &&
-        (p.profile?.name ||
-         p.services?.length ||
-         p.projects?.length);
-
-      if (hasPortfolio) {
-        // Returning user → preview mode
+      if (p) {
         setPortfolio({
-          profile: p.profile,
-          services: p.services,
-          projects: p.projects,
-          contact: p.contact,
+          profile: p.profile || {},
+          services: p.services || [],
+          projects: p.projects || [],
+          contact: p.contact || {},
         });
 
-        setUsername(p.publicUsername ?? "");
-
-        setPreview(true);
-      } else {
-        // New user → wizard mode
-        setPreview(false);
-        setStep(1);
+        setUsername(p.publicUsername || "");
       }
-    } catch (err) {
-      setPreview(false);
-      setStep(1);
-    }
 
-    setLoading(false);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   fetchPortfolio();
 }, []);
+
 
   // ------------------ Handlers ------------------
   const handleProfileChange = (e) =>
@@ -114,12 +102,14 @@ const handleSave = async () => {
     }
 
     // Call the API helper to save portfolio
-    const result = await savePortfolio({
-      profile: portfolio.profile,
-      services: portfolio.services,
-      projects: portfolio.projects,
-      contact: portfolio.contact,
-    });
+   const result = await savePortfolio({
+  publicUsername: username,
+  profile: portfolio.profile,
+  services: portfolio.services,
+  projects: portfolio.projects,
+  contact: portfolio.contact,
+});
+
 
     // Save publicUsername if it exists
     if (username) localStorage.setItem("portfolioUsername", username);
