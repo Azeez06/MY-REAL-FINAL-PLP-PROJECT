@@ -33,7 +33,7 @@ export default function PortfolioBuilder() {
   const [preview, setPreview] = useState(false);
   const [message, setMessage] = useState("");
 
- useEffect(() => {
+useEffect(() => {
   const fetchPortfolio = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -50,33 +50,37 @@ export default function PortfolioBuilder() {
 
       const hasPortfolio =
         p &&
-        (p.profile?.name ||
-         p.services?.length ||
-         p.projects?.length);
+        (
+          p.publicUsername ||
+          p.profile?.name ||
+          p.services?.length ||
+          p.projects?.length
+        );
 
       if (hasPortfolio) {
-        // Returning user → preview mode
+        // RETURNING USER
         setPortfolio({
-          profile: p.profile,
-          services: p.services,
-          projects: p.projects,
-          contact: p.contact,
+          profile: p.profile || {},
+          services: p.services || [],
+          projects: p.projects || [],
+          contact: p.contact || {},
         });
 
-        setUsername(p.publicUsername ?? "");
-
-        setPreview(true);
+        setUsername(p.publicUsername || "");
+        setPreview(true);     // 🔥 THIS WAS MISSING
       } else {
-        // New user → wizard mode
+        // NEW USER
         setPreview(false);
         setStep(1);
       }
+
     } catch (err) {
+      console.error(err);
       setPreview(false);
       setStep(1);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   fetchPortfolio();
