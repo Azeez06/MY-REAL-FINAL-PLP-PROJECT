@@ -33,7 +33,7 @@ export default function PortfolioBuilder() {
   const [preview, setPreview] = useState(false);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
+ useEffect(() => {
   const fetchPortfolio = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -46,24 +46,33 @@ export default function PortfolioBuilder() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (res.data) {
-        const p = res.data;
+      const p = res.data;
 
+      const hasPortfolio =
+        p &&
+        (p.profile?.name ||
+         p.services?.length ||
+         p.projects?.length);
+
+      if (hasPortfolio) {
+        // Returning user → preview mode
         setPortfolio({
-          profile: p.profile || { name: "", title: "", bio: "", image: "" },
-          services: p.services?.length ? p.services : [{ title: "", description: "" }],
-          projects: p.projects?.length ? p.projects : [{ title: "", description: "", link: "" }],
-          contact: p.contact || { email: "", phone: "", linkedin: "" },
+          profile: p.profile,
+          services: p.services,
+          projects: p.projects,
+          contact: p.contact,
         });
 
-        setUsername(p.publicUsername || "");
-
-        // ✅ RETURNING USER → SHOW PREVIEW DIRECTLY
+        setUsername(p.publicUsername);
         setPreview(true);
+      } else {
+        // New user → wizard mode
+        setPreview(false);
+        setStep(1);
       }
     } catch (err) {
-      console.log("No portfolio yet → new user");
-      setStep(1); // Wizard starts normally
+      setPreview(false);
+      setStep(1);
     }
 
     setLoading(false);
@@ -71,7 +80,6 @@ export default function PortfolioBuilder() {
 
   fetchPortfolio();
 }, []);
-
 
   // ------------------ Handlers ------------------
   const handleProfileChange = (e) =>
