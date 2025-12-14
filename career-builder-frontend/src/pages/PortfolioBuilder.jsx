@@ -48,27 +48,39 @@ export default function PortfolioBuilder() {
 
       const p = res.data;
 
-      if (p) {
+      const hasPortfolio =
+        p &&
+        (p.profile?.name ||
+         p.services?.length ||
+         p.projects?.length);
+
+      if (hasPortfolio) {
+        // Returning user → preview mode
         setPortfolio({
-          profile: p.profile || {},
-          services: p.services || [],
-          projects: p.projects || [],
-          contact: p.contact || {},
+          profile: p.profile,
+          services: p.services,
+          projects: p.projects,
+          contact: p.contact,
         });
 
-        setUsername(p.publicUsername || "");
-      }
+        setUsername(p.publicUsername ?? "");
 
+        setPreview(true);
+      } else {
+        // New user → wizard mode
+        setPreview(false);
+        setStep(1);
+      }
     } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+      setPreview(false);
+      setStep(1);
     }
+
+    setLoading(false);
   };
 
   fetchPortfolio();
 }, []);
-
 
   // ------------------ Handlers ------------------
   const handleProfileChange = (e) =>
