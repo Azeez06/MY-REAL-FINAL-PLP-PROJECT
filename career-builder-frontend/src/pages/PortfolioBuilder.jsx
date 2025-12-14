@@ -63,7 +63,8 @@ export default function PortfolioBuilder() {
           contact: p.contact,
         });
 
-        setUsername(p.publicUsername);
+        setUsername(p.publicUsername ?? "");
+
         setPreview(true);
       } else {
         // New user → wizard mode
@@ -244,16 +245,17 @@ const handleSave = async () => {
     Save Portfolio
   </button>
 
-  {username && (
-    <a
-      href={`/portfolio/${username}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 inline-block"
-    >
-      View Public Portfolio
-    </a>
-  )}
+  {username?.trim() && (
+  <a
+    href={`/${username}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mt-4 inline-block px-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
+  >
+    View Public Portfolio
+  </a>
+)}
+
 </div>
       </div>
     );
