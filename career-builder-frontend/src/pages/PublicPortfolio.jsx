@@ -15,7 +15,9 @@ export default function PublicPortfolio() {
     const fetchPortfolio = async () => {
       try {
         const res = await axios.get(`${API}/api/portfolio/view/${username}`);
-        setPortfolio(res.data);
+console.log("PUBLIC PORTFOLIO RESPONSE:", res.data);
+setPortfolio(res.data);
+
       } catch (err) {
         console.error("Error fetching public portfolio", err);
       }
