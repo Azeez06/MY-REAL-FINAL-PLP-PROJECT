@@ -62,17 +62,6 @@ function App() {
             </Layout>
           }
         />
-
-        {/* Public Portfolio View */}
-        <Route
-          path="/portfolio/:username"
-          element={
-            <Layout>
-              <PublicPortfolio />
-            </Layout>
-          }
-        />
-
         {/* Protected Pages */}
         <Route
           path="/dashboard"
@@ -163,17 +152,19 @@ function App() {
             </ProtectedRoute>
           }
         />
+{/* Public Portfolio View (MUST BE LAST) */}
+<Route
+  path="/:username"
+  element={
+    <Layout>
+      <PublicPortfolio />
+    </Layout>
+  }
+/>
 
       </Routes>
     </Router>
   );
-}
-
-// Wrapper to pass username from URL params
-import { useParams } from "react-router-dom";
-function PublicPortfolioWrapper() {
-  const { username } = useParams();
-  return <PublicPortfolio username={username} />;
 }
 
 export default App;
