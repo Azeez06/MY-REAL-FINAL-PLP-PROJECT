@@ -131,7 +131,6 @@ const addEducation = () => {
 
 const saveResumeToServer = async () => {
   try {
-    // Build payload from formData (example fits your state shape)
     const payload = {
       title: `${formData.name} ${formData.surname} CV`,
       personal: {
@@ -153,30 +152,23 @@ const saveResumeToServer = async () => {
       technicalSkills: formData.technicalSkills,
     };
 
-    const token = localStorage.getItem("token");
-
-    const res = await apiClient.post("api/resume/create", payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (res.data && res.data.resume) {
-      alert("Saved resume to server!");
-    }
-  } catch (err) {
-    console.error(
-      "saveResumeToServer error:",
-      err.response ? err.response : err
+    const res = await apiClient.post(
+      "/resume/create",
+      payload,
+      {
+        headers: authHeaders(), // ✅ unified auth
+      }
     );
 
+    if (res.data && res.data.resume) {
+      alert("Saved resume to dashboard!");
+    }
+  } catch (err) {
+    console.error("saveResumeToServer error:", err);
     alert(err.response?.data?.message || "Save failed");
   }
 };
-
-
-
-
+ 
 const [searchParams] = useSearchParams();
 const editId = searchParams.get("edit");
 

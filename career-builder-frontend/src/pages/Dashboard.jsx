@@ -10,7 +10,7 @@ import { Briefcase, Sparkles, Newspaper } from "lucide-react";
 
 const tiles = [
   { title: "Resume Builder", desc: "Create a job-winning resume", route: "/ResumeBuilder" },
-  { title: "CV Builder", desc: "Academic CV generator", route: "/resume-builder" },
+  { title: "CV Builder", desc: "Academic CV generator", route: "/ResumeBuilder" },
   { title: "Cover Letters", desc: "Personalized cover letters", route: "/CoverLetterBuilder" },
   { title: "SOP Generator", desc: "Generate statements of purpose", route: "/SOPBuilder" },
   { title: "Job Alerts", desc: "Get job notifications", route: "/JobAlerts" },
@@ -115,8 +115,6 @@ export default function Dashboard() {
             Logout
           </button>
         </div>
-
-
         {/* ============================================================
               1️⃣ RECOMMENDED JOBS SECTION
         ============================================================ */}
@@ -182,7 +180,6 @@ export default function Dashboard() {
     </ul>
   )}
 </div>
-
 
 
         {/* ============================================================
