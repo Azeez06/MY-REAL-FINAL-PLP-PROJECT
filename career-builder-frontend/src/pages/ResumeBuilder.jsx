@@ -178,14 +178,32 @@ useEffect(() => {
 
     setLoadingEdit(true);
     try {
-      const res = await apiClient.get(`/resume/${editId}`, {
-        headers: authHeaders(),
+      const res = await apiClient.get(
+        `/api/resume/${editId}`,
+        { headers: authHeaders() }
+      );
+
+      const r = res.data.resume;
+
+      // ✅ MAP BACKEND → FORM STATE
+      setFormData({
+        name: r.personal?.fullName?.split(" ")[0] || "",
+        surname: r.personal?.fullName?.split(" ").slice(1).join(" ") || "",
+        email: r.personal?.email || "",
+        phone: r.personal?.phone || "",
+        city: r.personal?.city || "",
+        country: r.personal?.country || "",
+        linkedin: r.personal?.linkedin || "",
+        summary: r.summary || "",
+        experiences: r.experiences || [],
+        education: r.education || [],
+        skills: (r.skills || []).join(", "),
+        certifications: r.certifications || [],
+        technicalSkills: r.technicalSkills || "",
       });
 
-      console.log("Loaded resume for editing:", res.data);
-
-      // Fill form with the saved resume
-      setFormData(res.data.resume);
+      // Optional: move user to first step
+      setStep(1);
 
     } catch (err) {
       console.error("Failed to load resume for edit:", err);
@@ -196,6 +214,7 @@ useEffect(() => {
 
   loadResumeForEdit();
 }, [editId]);
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
