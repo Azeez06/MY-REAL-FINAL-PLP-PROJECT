@@ -128,7 +128,6 @@ const addEducation = () => {
 
   pdf.save(`${formData.name || "My"}_Professional_CV.pdf`);
 };
-
 const saveResumeToServer = async () => {
   try {
     const payload = {
@@ -153,21 +152,18 @@ const saveResumeToServer = async () => {
     };
 
     const res = await apiClient.post(
-      "/resume/create",
+      "/api/resume/create", // ✅ THIS IS THE FIX
       payload,
-      {
-        headers: authHeaders(), // ✅ unified auth
-      }
+      { headers: authHeaders() }
     );
 
-    if (res.data && res.data.resume) {
-      alert("Saved resume to dashboard!");
-    }
+    alert("Saved resume to dashboard!");
   } catch (err) {
-    console.error("saveResumeToServer error:", err);
+    console.error("SAVE RESUME ERROR:", err.response || err);
     alert(err.response?.data?.message || "Save failed");
   }
 };
+
  
 const [searchParams] = useSearchParams();
 const editId = searchParams.get("edit");
