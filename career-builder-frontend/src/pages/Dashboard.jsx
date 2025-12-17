@@ -4,22 +4,36 @@ import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { apiClient, authHeaders } from "../utils/api";
+import { Sparkles, Newspaper } from "lucide-react";
+
+
 
 // Icons
-import { Briefcase, Sparkles, Newspaper } from "lucide-react";
+import {
+  FileText,
+  GraduationCap,
+  Mail,
+  BookOpen,
+  Bell,
+  Briefcase,
+  Scan,
+  Settings as SettingsIcon,
+} from "lucide-react";
 
 const tiles = [
-  { title: "Resume Builder", desc: "Create a job-winning resume", route: "/ResumeBuilder" },
-  { title: "CV Builder", desc: "Academic CV generator", route: "/ResumeBuilder" },
-  { title: "Cover Letters", desc: "Personalized cover letters", route: "/CoverLetterBuilder" },
-  { title: "SOP Generator", desc: "Generate statements of purpose", route: "/SOPBuilder" },
-  { title: "Job Alerts", desc: "Get job notifications", route: "/JobAlerts" },
-  { title: "Portfolio", desc: "Showcase your work", route: "/PortfolioBuilder" },
-  { title: "CV Analyzer", desc: "Get AI feedback", route: "/cv-analyzer" },
-  { title: "Settings", desc: "Manage account", route: "/Settings" },
+  { title: "Resume Builder", desc: "Create a job-winning resume", route: "/ResumeBuilder", icon: FileText, color: "blue" },
+  { title: "CV Builder", desc: "Academic CV generator", route: "/ResumeBuilder", icon: GraduationCap, color: "indigo" },
+  { title: "Cover Letters", desc: "Personalized cover letters", route: "/CoverLetterBuilder", icon: Mail, color: "emerald" },
+  { title: "SOP Generator", desc: "Generate statements of purpose", route: "/SOPBuilder", icon: BookOpen, color: "purple" },
+  { title: "Job Alerts", desc: "Get job notifications", route: "/JobAlerts", icon: Bell, color: "amber" },
+  { title: "Portfolio", desc: "Showcase your work", route: "/PortfolioBuilder", icon: Briefcase, color: "rose" },
+  { title: "CV Analyzer", desc: "Get AI feedback", route: "/cv-analyzer", icon: Scan, color: "cyan" },
 ];
+
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [showSettings, setShowSettings] = useState(false);
+
 
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
@@ -97,31 +111,36 @@ export default function Dashboard() {
     localStorage.removeItem("cb_user");
     navigate("/");
   };
-
-  
-  
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
 
-        {/* =================== HEADER =================== */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
+       <div className="flex justify-between items-center mb-8">
+  <h1 className="text-3xl font-bold">Dashboard</h1>
+
+  <div className="flex items-center gap-3">
+    <button
+      onClick={() => setShowSettings(true)}
+      className="flex items-center gap-2 px-4 py-2 border rounded-md 
+                 hover:bg-gray-100 transition"
+    >
+      <SettingsIcon size={18} />
+      Settings
+    </button>
+    <button
+      onClick={handleLogout}
+      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+    >
+      Logout
+    </button>
+  </div>
+</div>
         {/* ============================================================
               1️⃣ RECOMMENDED JOBS SECTION
         ============================================================ */}
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Briefcase className="text-blue-600" /> Recommended Jobs Related to Your Resume
         </h2>
-
         {loadingJobs ? (
           <p className="text-gray-600">Fetching job recommendations...</p>
         ) : jobs.length === 0 ? (
@@ -145,7 +164,6 @@ export default function Dashboard() {
             ))}
           </div>
         )}
-
 <div className="mt-8">
   <h2 className="text-xl font-bold mb-3">Your Saved Resumes</h2>
 
@@ -189,22 +207,67 @@ export default function Dashboard() {
           <Sparkles className="text-purple-600" /> Explore Job Tools
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {tiles.map((t, i) => (
-            <div
-              key={i}
-              onClick={() => navigate(t.route)}
-              className="cursor-pointer bg-white p-6 rounded-xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition"
-            >
-              <h3 className="text-lg font-semibold">{t.title}</h3>
-              <p className="text-sm text-gray-600">{t.desc}</p>
-            </div>
-          ))}
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+  {tiles.map((t, i) => {
+    const Icon = t.icon;
+    return (
+      <div
+        key={i}
+        onClick={() => navigate(t.route)}
+        className="group cursor-pointer bg-white p-6 rounded-2xl border shadow-sm 
+                   hover:shadow-xl hover:border-gray-200 transition-all duration-300"
+      >
+        <div
+          className={`w-12 h-12 rounded-xl flex items-center justify-center 
+          bg-${t.color}-100 text-${t.color}-600 mb-4`}
+        >
+          <Icon size={22} />
         </div>
 
+        <h3 className="text-lg font-semibold mb-1 group-hover:text-gray-900">
+          {t.title}
+        </h3>
+
+        <p className="text-sm text-gray-500 leading-relaxed">
+          {t.desc}
+        </p>
+      </div>
+    );
+  })}
+</div>
+
+
+      {/* ================= SETTINGS SIDEBAR ================= */}
+      {showSettings && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setShowSettings(false)}
+          />
+
+          {/* Sidebar */}
+          <div className="relative w-80 bg-white h-full shadow-xl p-6 animate-slideIn">
+            <h2 className="text-xl font-bold mb-6">Settings</h2>
+
+            <ul className="space-y-4 text-sm">
+              <li className="cursor-pointer hover:text-blue-600">Profile</li>
+              <li className="cursor-pointer hover:text-blue-600">Account</li>
+              <li className="cursor-pointer hover:text-blue-600">Security</li>
+              <li className="cursor-pointer hover:text-blue-600">Notifications</li>
+            </ul>
+
+            <button
+              onClick={() => setShowSettings(false)}
+              className="mt-10 w-full border py-2 rounded-md hover:bg-gray-100"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       </div>
-
     </div>
   );
 }
