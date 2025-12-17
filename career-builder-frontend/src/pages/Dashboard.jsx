@@ -75,7 +75,7 @@ export default function Dashboard() {
   useEffect(() => {
     const loadResumes = async () => {
       try {
-        const res = await apiClient.get("/resume/my", {
+        const res = await apiClient.get("/api/resume/my", {
           headers: authHeaders(),
         });
 
