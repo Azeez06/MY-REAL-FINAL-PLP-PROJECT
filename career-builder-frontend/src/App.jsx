@@ -9,12 +9,12 @@ import CoverLetterBuilder from "./pages/CoverLetterBuilder";
 import SOPBuilder from "./pages/SOPBuilder";
 import JobAlerts from "./pages/JobAlerts";
 import PortfolioBuilder from "./pages/PortfolioBuilder";
-import Settings from "./pages/Settings";
+
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // New pages
-import SetUsername from "./pages/SetUsername";
+
 import PublicPortfolio from "./pages/PublicPortfolio";
 
 import Navbar from "./components/Navbar";
@@ -118,18 +118,6 @@ function App() {
           }
         />
 
-        {/* Username setup */}
-        <Route
-          path="/set-username"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <SetUsername />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
         {/* Portfolio Editor / Builder */}
         <Route
           path="/PortfolioBuilder"
@@ -142,16 +130,7 @@ function App() {
           }
         />
 
-        <Route
-          path="/Settings"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Settings />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+       
 {/* Public Portfolio View (MUST BE LAST) */}
 <Route
   path="/:username"
