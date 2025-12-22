@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../utils/api";
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -10,24 +11,22 @@ export default function Login() {
   const [error, setError]       = useState("");
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    try {
-            const res = await axios.post(
-        "https://career-builder-backend-anad.onrender.com/api/auth/login",
-        { email, password }
-      );
+  try {
+    const res = await loginUser({ email, password });
 
-      // Save token
-      localStorage.setItem("token", res.data.token);
+    // Save token
+    localStorage.setItem("token", res.data.token);
 
-      // Redirect
-      navigate("/dashboard");
-    } catch (error) {
-      setError(error.response?.data?.message || "Login failed");
-    }
-  };
+    // Redirect
+    navigate("/dashboard");
+  } catch (error) {
+    setError(error.response?.data?.message || "Login failed");
+  }
+};
+
 
   return (
     <div>

@@ -1,8 +1,9 @@
 // src/pages/Register.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Footer from "../components/Footer";
+import { registerUser, loginUser } from "../utils/api";
+
 
 export default function Register() {
   const [isLogin, setIsLogin] = useState(false);
@@ -13,40 +14,35 @@ export default function Register() {
   const navigate = useNavigate();
 
   // 🔹 Handles both Register + Login
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    try {
-      if (isLogin) {
-        // =====================
-        // 🔵 LOGIN REQUEST
-        // =====================
-      const res = await axios.post(
-  "https://career-builder-backend-anad.onrender.com/api/auth/login",
-  { email, password }
-);
-
-        localStorage.setItem("token", res.data.token);
-        navigate("/dashboard");
-        return;
-      }
-
-      // =====================
-      // 🔵 REGISTER REQUEST
-      // =====================
-  const res = await axios.post(
-  "https://career-builder-backend-anad.onrender.com/api/auth/register",
-  { fullName: fullname, email, password }
-);
+  try {
+    // 🔵 LOGIN
+    if (isLogin) {
+      const res = await loginUser({ email, password });
 
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
-
-    } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong.");
+      return;
     }
-  };
+
+    // 🔵 REGISTER
+    const res = await registerUser({
+      fullName: fullname,
+      email,
+      password,
+    });
+
+    localStorage.setItem("token", res.data.token);
+    navigate("/dashboard");
+
+  } catch (err) {
+    setError(err.response?.data?.message || "Something went wrong.");
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-blue-300 px-4">

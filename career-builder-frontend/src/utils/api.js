@@ -1,30 +1,43 @@
 import axios from "axios";
 
-// Use the backend from Vercel env OR default to your Render backend
-const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  "https://career-builder-backend-anad.onrender.com";
+// 🔹 Backend base URL (from Vercel env ONLY)
+const API_BASE = import.meta.env.VITE_API_URL;
 
-// Axios instance
+if (!API_BASE) {
+  console.warn("⚠️ VITE_API_URL is not set");
+}
+
+// 🔹 Axios instance
 export const apiClient = axios.create({
   baseURL: API_BASE,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Attach token helper
-export const authHeaders = () => {
-  const token = localStorage.getItem("token");
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
+// 🔹 Automatically attach token to every request
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-export const savePortfolio = async (portfolioData) => {
-  const token = localStorage.getItem("token");
+// =====================
+// API HELPERS
+// =====================
 
-  const res = await apiClient.put(`/api/portfolio/save`, portfolioData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+// AUTH
+export const registerUser = (data) =>
+  apiClient.post("/api/auth/register", data);
 
-  return res.data;
-};
+export const loginUser = (data) =>
+  apiClient.post("/api/auth/login", data);
 
-// You can add more API helper functions here as needed
+// PORTFOLIO
+export const savePortfolio = (portfolioData) =>
+  apiClient.put("/api/portfolio/save", portfolioData);
