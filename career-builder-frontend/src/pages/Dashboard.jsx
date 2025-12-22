@@ -32,6 +32,17 @@ const tiles = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
+
+// 🔐 AUTH GUARD — ADD THIS
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/register");
+    }
+  }, [navigate]);
+
+  // rest of your code...
   const [showSettings, setShowSettings] = useState(false);
 
 
