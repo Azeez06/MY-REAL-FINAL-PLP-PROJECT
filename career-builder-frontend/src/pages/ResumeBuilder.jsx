@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Footer from "../components/Footer";  
-import { apiClient, authHeaders } from "../utils/api";
+import { apiClient } from "../utils/api";
 import { useSearchParams } from "react-router-dom";
 
 
@@ -151,11 +151,8 @@ const saveResumeToServer = async () => {
       technicalSkills: formData.technicalSkills,
     };
 
-    const res = await apiClient.post(
-      "/api/resume/create", // ✅ THIS IS THE FIX
-      payload,
-      { headers: authHeaders() }
-    );
+    // ✅ Remove authHeaders()
+    const res = await apiClient.post("/api/resume/create", payload);
 
     alert("Saved resume to dashboard!");
   } catch (err) {
@@ -164,28 +161,17 @@ const saveResumeToServer = async () => {
   }
 };
 
- 
-const [searchParams] = useSearchParams();
-const editId = searchParams.get("edit");
-
-const [loadingEdit, setLoadingEdit] = useState(false);
-// ======================================================
-// 🚀 EDIT MODE — Load existing resume
-// ======================================================
 useEffect(() => {
   const loadResumeForEdit = async () => {
     if (!editId) return; // not editing
 
     setLoadingEdit(true);
     try {
-      const res = await apiClient.get(
-        `/api/resume/${editId}`,
-        { headers: authHeaders() }
-      );
-
+      // ✅ Remove authHeaders()
+      const res = await apiClient.get(`/api/resume/${editId}`);
       const r = res.data.resume;
 
-      // ✅ MAP BACKEND → FORM STATE
+      // Map backend → form state
       setFormData({
         name: r.personal?.fullName?.split(" ")[0] || "",
         surname: r.personal?.fullName?.split(" ").slice(1).join(" ") || "",
@@ -202,9 +188,7 @@ useEffect(() => {
         technicalSkills: r.technicalSkills || "",
       });
 
-      // Optional: move user to first step
       setStep(1);
-
     } catch (err) {
       console.error("Failed to load resume for edit:", err);
     } finally {
@@ -214,7 +198,6 @@ useEffect(() => {
 
   loadResumeForEdit();
 }, [editId]);
-
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">

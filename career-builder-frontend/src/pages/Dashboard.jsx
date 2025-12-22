@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
-import { apiClient, authHeaders } from "../utils/api";
+import { apiClient} from "../utils/api";
 import { Sparkles, Newspaper } from "lucide-react";
 
 
@@ -89,9 +89,7 @@ export default function Dashboard() {
   useEffect(() => {
     const loadResumes = async () => {
       try {
-        const res = await apiClient.get("/api/resume/my", {
-          headers: authHeaders(),
-        });
+        const res = await apiClient.get("/api/resume/my");
 
         console.log("Fetched resumes:", res.data);
         setSavedResumes(res.data.resumes || []);
